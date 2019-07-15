@@ -182,9 +182,9 @@ return;
     ($RefMagic) = $_[2];
 
     print "There was a thud and just a little blood";
-    my $tempfire =($RefEnemy->{HP} - 4);
-    $RefEnemy->{HP} = $tempfire;
-    my $fireroll = int(rand($RefMagic->{Red}{Chance}));
+    my $tempfire =($RefEnemy->{HP} - 4); # subtract 4 base damage from enemy HP
+    $RefEnemy->{HP} = $tempfire; #set enemy HP to new post-damage amount
+    my $fireroll = int(rand($RefMagic->{Red}{Chance})); #random roll for the proc
     if ($fireroll == 2) {
         print "You smell charred body\n";
         print "You did 15 damage";
@@ -204,9 +204,9 @@ sub process_frost {      # The frost subroutine. 4 base damage. chance to take e
     ($RefEnemy) = $_[1];
     ($RefMagic) = $_[2];
 
-    my $tempfrost =($RefEnemy->{HP} - 4);
-    $RefEnemy->{HP} = $tempfrost;
-    my $frostroll = int(rand($RefMagic->{Blue}{Chance})); 
+    my $tempfrost =($RefEnemy->{HP} - 4); # subtract 4 base damage from enemy HP
+    $RefEnemy->{HP} = $tempfrost; #set enemy HP to new post-damage amount 
+    my $frostroll = int(rand($RefMagic->{Blue}{Chance})); #random roll for the debuff
     if ($frostroll == 2) {
         print "The effect is somwewhere between a shatter and full on dissolving of rock and leather.\n";
         print "As the scraps hit the floor the vitals are exsposed.\n";
@@ -221,9 +221,9 @@ sub process_poison {       #The poison subroutine. 4 base damage. chance to pois
     ($RefEnemy) = $_[1];                                                                         
     ($RefMagic) = $_[2];
 
-    my $temppoison =($RefEnemy->{HP} - 4);
-    $RefEnemy->{HP} = $temppoison;                                                                  #225
-    my $poisonroll = int(rand($RefMagic->{Green}{Chance}));
+    my $temppoison =($RefEnemy->{HP} - 4); # subtract 4 base damage from enemy HP
+    $RefEnemy->{HP} = $temppoison;        #set enemy HP to new post-damage amount                                                          #225
+    my $poisonroll = int(rand($RefMagic->{Green}{Chance})); #random roll for the debuff
     if ($poisonroll == 2) {
         my $PSNtemp = ($RefEnemy->{PSN} + 3);
         $RefEnemy->{PSN} = $PSNtemp;
@@ -401,7 +401,7 @@ sub process_battle {   #The main battle subroutine
             my $defendend = ($RefPlayer->{AMR} / 3);
             $RefPlayer->{AMR} = $defendend;                                                         #400
             redo;
-}       elsif ($battleplan == 3) {    #magic
+}       elsif ($battleplan == 3) {    #magic Was never fully implemented.
             print "magic?\n";
             redo;
 }       elsif ($battleplan ==4) {     #run

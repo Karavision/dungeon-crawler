@@ -48,7 +48,7 @@ var player = { //All of the player data
     cast: 0, //used to determine is magic was used during magic subroutine
     prevamr: 0 //used to reset AMR after frost effect
 };
-var enemy = { //All of the player data
+var enemy = { //All of the enemy data
     hp: 25,
     amr: 5,
     pwr: 32,
@@ -63,3 +63,5 @@ var enemy = { //All of the player data
     cast: 0, //used to determine is magic was used during magic subroutine
     prevamr: 5 //used to reset AMR after frost effect
 };
+
+// My next step is to recreate the main battle functions
