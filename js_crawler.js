@@ -64,4 +64,31 @@ var enemy = { //All of the enemy data
     prevamr: 5 //used to reset AMR after frost effect
 };
 
+function diceRoll(min, max) {
+    min = Math.ceil(min);
+    max = Math.floor(max);
+    return Math.floor(Math.random() * (max - min + 1)) + min; //The maximum is inclusive and the minimum is inclusive 
+  }
+
 // My next step is to recreate the main battle functions
+function pTurn(player, enemy) {
+    var dmg;
+    var tempRoll = diceRoll(1, 20);
+    if (tempRoll == 20) {
+        dmg = (player.pwr * 1.5);}
+    else if (tempRoll <= 2) {
+        critMiss(player, enemy);}
+    else {
+        tempRoll = diceRoll(1, 20);
+        dmg = (Math.round(player.pwr / tempRoll) * (enemy.amr * .1));
+    }
+    enemy.hp = (enemy.hp - dmg);
+
+    
+    }
+}
+
+function critMiss(player, enemy) {
+
+
+}
