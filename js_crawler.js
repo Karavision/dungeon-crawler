@@ -1,3 +1,5 @@
+var def;
+
 var red = {
     atk: 4,
     chance: 3,
@@ -65,14 +67,14 @@ var enemy = { //All of the enemy data
     prevamr: 5 //used to reset AMR after frost effect
 };
 
-function diceRoll(min, max) {
+function diceRoll(min, max) { //Handles all dice rolls.
     min = Math.ceil(min);
     max = Math.floor(max);
     return Math.floor(Math.random() * (max - min + 1)) + min; //The maximum is inclusive and the minimum is inclusive 
 }
 
 // My next step is to recreate the main battle functions
-function battle(player, enemy) {
+function battle(player, enemy, def) {
     while (won == 0) {
         document.getElementById("bMenu").style.visibility = "visible";
         document.getElementById("bMenu").style.opacity = "1";
@@ -84,7 +86,7 @@ function battle(player, enemy) {
         return;
     }}
 
-function bChoice(clicked_id, player, enemy) {
+function bChoice(clicked_id, player, enemy, def) { // calls the functions for the battle choices.
     var choiceBttn = clicked_id;
     document.getElementById("bMenu").style.visibility = "hidden";
     switch (choiceBttn) {
@@ -93,22 +95,29 @@ function bChoice(clicked_id, player, enemy) {
             pTurn(player, enemy);
             eTurn(player, enemy);
             break;
+
+        case "defend":
+            choiceBttn = "disable";
+            def = 1.2;   // multiplyer for player amr.
+            eTurn(player, enemy, def);
+            break;
     }
+
     return;
 }
 
-function pTurn(player, enemy) {
+function pTurn(player, enemy) {  // The Player turn function
     if (player.won == 1) {
         return;
     }
     var dmg;
     var tempRoll = diceRoll(1, 20);
-    if (tempRoll == 20) {
+    if (tempRoll == 20) {            // Critical Hit.
         dmg = (player.pwr * 1.5);
-    } else if (tempRoll <= 2) {
+    } else if (tempRoll <= 2) {     // Critical Miss.
         critMiss(player, enemy);
     } else {
-        tempRoll = diceRoll(1, 20);
+        tempRoll = diceRoll(1, 4);
         dmg = (Math.round(player.pwr / tempRoll) * (enemy.amr * .1));
     }
     enemy.hp = (enemy.hp - dmg);
@@ -119,7 +128,7 @@ function pTurn(player, enemy) {
     return;
 }
 
-function eTurn(player, enemy) {
+function eTurn(player, enemy, def) { // The enemy turn function
     if (player.won == 1) {
         return;
     }
@@ -131,23 +140,24 @@ function eTurn(player, enemy) {
         critMiss(player, enemy);
     } else {
         tempRoll = diceRoll(1, 20);
-        dmg = (Math.round(enemy.pwr / tempRoll) * (player.amr * .1));
+        dmg = (Math.round(enemy.pwr / tempRoll) * ((player.amr * def) * .1));
     }
     player.hp = (player.hp - dmg);
     if (player.hp < 1) {
         lose();
     }
+    def = 0;
     hitEmote();
     return;
 }
 
-function critMiss(player, enemy) {
+function critMiss(player, enemy) { // I may need to create a property that denotes a crit miss.
 
 
 }
 
 function win() {
-    player.won = 1;
+    player.won = 1; // will exit the battle loop.
 }
 
 function hitEmote() {
@@ -155,7 +165,7 @@ function hitEmote() {
 
 }
 
-function lose() {
+function lose() { // Will go back to the start of the game.
 
 
 }
