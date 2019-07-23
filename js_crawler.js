@@ -2,30 +2,37 @@ var def;
 
 var red = {
     atk: 4,
-    chance: 3,
+    chance: 2,
     type: 'fire',
-    name: 'Red Stone'
+    name: 'Red Stone',
+    text: 'The red spills upon the target in viscous flame'
 };
 
 var blue = {
     atk: 4,
     chance: 3,
     type: 'fire',
-    name: 'Blue Stone'
+    name: 'Blue Stone',
+    text: 'The cold turns the skin a shade of blue and white.'
+
 };
 
 var green = {
     atk: 4,
     chance: 3,
     type: 'fire',
-    name: 'Green Stone'
+    name: 'Green Stone',
+    text: 'The toxins create a green drowned in blackness'
+
 };
 
 var yellow = {
     atk: 4,
-    chance: 3,
+    chance: 4,
     type: 'fire',
-    name: 'Yellow Stone'
+    name: 'Yellow Stone',
+    text: 'The shift in fortune is almost noticable to all'
+
 };
 
 const magicStones = {
@@ -74,7 +81,7 @@ function diceRoll(min, max) { //Handles all dice rolls.
 }
 
 // My next step is to recreate the main battle functions
-function battle(player, enemy, def) {
+function battle(player, enemy) {
     while (won == 0) {
         document.getElementById("bMenu").style.visibility = "visible";
         document.getElementById("bMenu").style.opacity = "1";
@@ -93,13 +100,13 @@ function bChoice(clicked_id, player, enemy, def) { // calls the functions for th
         case "attack":
             choiceBttn = "disable";
             pTurn(player, enemy);
-            eTurn(player, enemy);
+            eTurn(player, enemy, magicStones);
             break;
 
         case "defend":
             choiceBttn = "disable";
             def = 1.2;   // multiplyer for player amr.
-            eTurn(player, enemy, def);
+            eTurn(player, enemy, def, magicStones);
             break;
     }
 
@@ -115,14 +122,14 @@ function pTurn(player, enemy) {  // The Player turn function
     if (tempRoll == 20) {            // Critical Hit.
         dmg = (player.pwr * 1.5);
     } else if (tempRoll <= 2) {     // Critical Miss.
-        critMiss(player, enemy);
+        player.hp = (player.hp - (enemy.pwr / 4));
     } else {
         tempRoll = diceRoll(1, 4);
         dmg = (Math.round(player.pwr / tempRoll) * (enemy.amr * .1));
     }
     enemy.hp = (enemy.hp - dmg);
     if (enemy.hp < 1) {
-        win();
+        win(enemy);
     }
     hitEmote();
     return;
@@ -136,8 +143,11 @@ function eTurn(player, enemy, def) { // The enemy turn function
     var tempRoll = diceRoll(1, 20);
     if (tempRoll == 20) {
         dmg = (enemy.pwr * 1.5);
-    } else if (tempRoll <= 2) {
-        critMiss(player, enemy);
+    } else if ((tempRoll >13) && (tempRoll < 20)) {
+        var stone = ((diceRoll(1, 5)) - 1);
+        enemyMagic(stone, magicStones, player);
+    } else if (tempRoll <= 2) {     // Critical Miss.
+        enemy.hp = (enemy.hp - (player.pwr / 4));
     } else {
         tempRoll = diceRoll(1, 20);
         dmg = (Math.round(enemy.pwr / tempRoll) * ((player.amr * def) * .1));
@@ -151,17 +161,19 @@ function eTurn(player, enemy, def) { // The enemy turn function
     return;
 }
 
-function critMiss(player, enemy) { // I may need to create a property that denotes a crit miss.
-
+function enemyMagic (indx, magicStones, player){
+var cast = magicStones [indx];
+document.querySelector("gameText").innerHTML = cast.text;
+hitEmote();
+player.hp = ((cast.atk * 1.5) - diceRoll(1, 3));
+//I need a switch statement here to apply the magic effects.
 
 }
-
-function win() {
+function win(enemy) {
     player.won = 1; // will exit the battle loop.
 }
 
 function hitEmote() {
-
 
 }
 
