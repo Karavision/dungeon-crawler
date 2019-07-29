@@ -41,7 +41,8 @@ const magicStones = {
     green,
     yellow
 };
-
+/* I need to turn this into a constructor function.
+This will allow me to reset the stats after each fight*/
 var player = { //All of the player data
     hp: 25,
     amr: 0,
@@ -73,6 +74,10 @@ var enemy = { //All of the enemy data
     cast: 0, //used to determine is magic was used during magic subroutine
     prevamr: 5 //used to reset AMR after frost effect
 };
+// *This is where the main code will reside
+
+
+// *This begins the function definitions
 
 function diceRoll(min, max) { //Handles all dice rolls.
     min = Math.ceil(min);
