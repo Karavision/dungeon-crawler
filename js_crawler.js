@@ -91,7 +91,8 @@ function battle(player, enemy) {
     }
     if (won == 1) {
         return;
-    }}
+    }
+}
 
 function bChoice(clicked_id, player, enemy, def) { // calls the functions for the battle choices.
     var choiceBttn = clicked_id;
@@ -105,23 +106,44 @@ function bChoice(clicked_id, player, enemy, def) { // calls the functions for th
 
         case "defend":
             choiceBttn = "disable";
-            def = 1.2;   // multiplyer for player amr.
+            def = 1.2; // multiplyer for player amr.
             eTurn(player, enemy, def, magicStones);
             break;
-    }
 
+        case "magic":
+            if (player.red == 1) {
+                playerMagic("red", enemy);
+                player.red = 0;
+                break;
+            }
+            if (player.blue == 1) {
+                playerMagic("blue", enemy);
+                player.blue = 0;
+                break;
+            }
+            if (player.green == 1) {
+                playerMagic("green", enemy);
+                player.green = 0;
+                break;
+            }
+            if (player.yellow == 1) {
+                playerMagic("yellow", enemy);
+                player.yellow = 0;
+                break;
+            }
+    }
     return;
 }
 
-function pTurn(player, enemy) {  // The Player turn function
+function pTurn(player, enemy) { // The Player turn function
     if (player.won == 1) {
         return;
     }
     var dmg;
     var tempRoll = diceRoll(1, 20);
-    if (tempRoll == 20) {            // Critical Hit.
+    if (tempRoll == 20) { // Critical Hit.
         dmg = (player.pwr * 1.5);
-    } else if (tempRoll <= 2) {     // Critical Miss.
+    } else if (tempRoll <= 2) { // Critical Miss.
         player.hp = (player.hp - (enemy.pwr / 4));
     } else {
         tempRoll = diceRoll(1, 4);
@@ -143,10 +165,10 @@ function eTurn(player, enemy, def) { // The enemy turn function
     var tempRoll = diceRoll(1, 20);
     if (tempRoll == 20) {
         dmg = (enemy.pwr * 1.5);
-    } else if ((tempRoll >13) && (tempRoll < 20)) {
+    } else if ((tempRoll > 13) && (tempRoll < 20)) {
         var stone = ((diceRoll(1, 5)) - 1);
         enemyMagic(stone, magicStones, player);
-    } else if (tempRoll <= 2) {     // Critical Miss.
+    } else if (tempRoll <= 2) { // Critical Miss.
         enemy.hp = (enemy.hp - (player.pwr / 4));
     } else {
         tempRoll = diceRoll(1, 20);
@@ -161,14 +183,86 @@ function eTurn(player, enemy, def) { // The enemy turn function
     return;
 }
 
-function enemyMagic (indx, magicStones, player){
-var cast = magicStones [indx];
-document.querySelector("gameText").innerHTML = cast.text;
-hitEmote();
-player.hp = ((cast.atk * 1.5) - diceRoll(1, 3));
-//I need a switch statement here to apply the magic effects.
-
+function enemyMagic(indx, magicStones, player) {
+    var cast = magicStones[indx];
+    var proc;
+    document.querySelector("gameText").innerHTML = cast.text;
+    hitEmote();
+    player.hp = (player.hp - ((cast.atk * 1.5) - diceRoll(1, 3))); // base spell damage
+    if (player.luck == 1) { // the luck effect causes all spells to proc, automatically
+        proc = 2;
+    } else {
+        proc = diceRoll(1, cast.chance);
+    }
+    switch (cast) {
+        case "red": // additional fire damage
+            if (proc == 2) {
+                player.hp = (player.hp - 8);
+            } else {
+                break;
+            }
+            case "blue": // shatters armor
+                if (proc == 2) {
+                    player.amr = 0;
+                } else {
+                    break;
+                }
+                case "green": // causes poison damage
+                    if (proc == 2) {
+                        player.psn = 1;
+                    } else {
+                        break;
+                    }
+                    case "yellow": // sets luck effect
+                        if (proc == 2) {
+                            player.luck = 1;
+                        } else {
+                            break;
+                        }
+    }
+    return;
 }
+
+function playerMagic(indx, enemy) {
+    var cast = magicStones[indx];
+    var proc;
+    document.querySelector("gameText").innerHTML = cast.text;
+    hitEmote();
+    enemy.hp = (enemy.hp - ((cast.atk * 1.5) - diceRoll(1, 3))); // base spell damage
+    if (player.luck == 1) { // the luck effect causes all spells to proc, automatically
+        proc = 2;
+    } else {
+        proc = diceRoll(1, cast.chance);
+    }
+    switch (cast) {
+        case "red": // additional fire damage
+            if (proc == 2) {
+                enemy.hp = (enemy.hp - 8);
+            } else {
+                break;
+            }
+            case "blue": // shatters armor
+                if (proc == 2) {
+                    enemy.amr = 0;
+                } else {
+                    break;
+                }
+                case "green": // causes poison damage
+                    if (proc == 2) {
+                        enemy.psn = 1;
+                    } else {
+                        break;
+                    }
+                    case "yellow": // sets luck effect
+                        if (proc == 2) {
+                            enemy.luck = 1;
+                        } else {
+                            break;
+                        }
+    }
+    return;
+}
+
 function win(enemy) {
     player.won = 1; // will exit the battle loop.
 }
