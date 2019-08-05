@@ -41,8 +41,11 @@ const magicStones = {
     green,
     yellow
 };
+
+ var round = 0;
 /* I need to turn this into a constructor function.
 This will allow me to reset the stats after each fight*/
+/*
 var player = { //All of the player data
     hp: 25,
     amr: 0,
@@ -59,6 +62,29 @@ var player = { //All of the player data
     prevamr: 0, //used to reset AMR after frost effect
     won: 0
 };
+*/
+function base_player () {
+    this.hp = 25;
+    this.amr = 0;
+    this.pwr = 0;
+    this.wpn = '';
+    this.psn = 0; //poison effect counter
+    this.luck = 0; //luck effect counter
+    this.amrwdn = 0; //turn counter for frost effect
+    this.red = 0; //colors are inventory. They keep -
+    this.blue = 0; //-players limited to one stone.
+    this.green = 0;
+    this.yellow = 0;
+    this.cast = 0; //used to determine is magic was used during magic subroutine
+    this.prevamr = 0; //used to reset AMR after frost effect
+    this.won = 0;
+}
+
+function create (){
+player = new base_player();
+return;
+}
+
 var enemy = { //All of the enemy data
     hp: 25,
     amr: 5,
@@ -87,6 +113,9 @@ function diceRoll(min, max) { //Handles all dice rolls.
 
 // My next step is to recreate the main battle functions
 function battle(player, enemy) {
+    round++;
+    document.querySelector('mainText').text = ("Round" + " " + round);
+    create();
     while (won == 0) {
         document.getElementById("bMenu").style.visibility = "visible";
         document.getElementById("bMenu").style.opacity = "1";
@@ -269,6 +298,7 @@ function playerMagic(indx, enemy) {
 }
 
 function win(enemy) {
+    round = 0;
     player.won = 1; // will exit the battle loop.
 }
 
